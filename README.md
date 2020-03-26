@@ -17,6 +17,9 @@ Considere um arquivo texto onde cada linha representa as respostas de uma prova 
 
 [ ] Colocar aqui uma imagem.
 
+![Alt Text](https://github.com/ericsonmoreira/segundo_trabalho_peoo/blob/master/doc/imagem.png)
+
+
 Crie um programa que faça os seguintes itens:
 
 [ ] Permita ao usuário criar o arquivo com as respostas de todos os aluno de uma disciplina. O nome do arquivo será o nome da disciplina. O usuário é livre para inserir quantos alunos ele queira. O usuário pode criar mais de uma disciplina. 
