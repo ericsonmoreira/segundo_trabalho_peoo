@@ -1,7 +1,9 @@
 # Segundo trabalho prático da disciplina PEOO da UECE semestre 2019.2
 
 __Valor__: 2 pontos
+
 __Data de entrega__: 08 de abril
+
 __Equipe__: até 2 pessoas
 
 Nome                                        | Matrícula
