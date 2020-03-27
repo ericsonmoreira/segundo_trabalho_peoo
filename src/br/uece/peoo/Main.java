@@ -1,5 +1,6 @@
 package br.uece.peoo;
 
+import br.uece.peoo.controler.DisciplinaControler;
 import br.uece.peoo.model.Aluno;
 import br.uece.peoo.model.Disciplina;
 
@@ -36,7 +37,10 @@ public class Main {
 
         Disciplina peoo = new Disciplina("PEOO", alunos);
 
-        peoo.criarFileDisciplina(); // criarndo arquivo
+        DisciplinaControler dc = DisciplinaControler.getInstance();
+
+//        peoo.fileFromDisciplina();
+
 
     }
 

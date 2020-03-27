@@ -1,9 +1,8 @@
 package br.uece.peoo.model;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import br.uece.peoo.controler.DisciplinaControler;
+
+import java.io.*;
 import java.util.List;
 
 public class Disciplina {
@@ -38,25 +37,12 @@ public class Disciplina {
         this.alunos = alunos;
     }
 
-    /**
-     * Cria um arquivo em doc/disciplinas/ da {@link Disciplina}
-     * @return arquivo da disciplina em formato de texto(txt).
-     */
-    public File criarFileDisciplina() {
-        File fileDisciplia = new File("doc/disciplinas/" + nome + ".txt");
-        try {
-            FileWriter fileWriter = new FileWriter(fileDisciplia);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            for (Aluno aluno: alunos) {
-                bufferedWriter.write(aluno.toString());
-                bufferedWriter.newLine();
-            }
-            bufferedWriter.close();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return fileDisciplia;
+    @Override
+    public String toString() {
+        return "Disciplina{" +
+                "nome='" + nome + '\'' +
+                ", alunos=" + alunos +
+                '}';
     }
 }
 
