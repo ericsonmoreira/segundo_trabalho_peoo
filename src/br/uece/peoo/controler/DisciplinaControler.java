@@ -6,13 +6,14 @@ import br.uece.peoo.model.Disciplina;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
 
 public class DisciplinaControler {
 
     private static DisciplinaControler controler;
 
-    private static final String LOCATE = "doc/disciplinas/";
+    public static final String DOC_DISCIPLINAS = "doc/disciplinas/";
+    public static final String DOC_GABARITOS = "doc/gabaritos/";
+    public static final String DOC_RESULTADOS = "doc/disciplinas/resultados/";
 
     private DisciplinaControler() { /* nada aqui */}
 
@@ -31,7 +32,7 @@ public class DisciplinaControler {
 
     public ArrayList<Disciplina> allDisciplinas() {
         ArrayList<Disciplina> disciplinas = new ArrayList<Disciplina>();
-        File folderDisciplinas = new File(LOCATE); // instancia a pasta das disciplinas
+        File folderDisciplinas = new File(DOC_DISCIPLINAS); // instancia a pasta das disciplinas
         if (folderDisciplinas.isDirectory()) {
             for (File file: folderDisciplinas.listFiles()) {
                 disciplinas.add(disciplinaFromFile(file));
@@ -41,7 +42,7 @@ public class DisciplinaControler {
     }
 
     public Disciplina findDisciplina(String name) {
-        File file = new File(LOCATE + name + ".txt");
+        File file = new File(DOC_DISCIPLINAS + name + ".txt");
         if (!file.exists())
             return null;
         else
@@ -82,20 +83,23 @@ public class DisciplinaControler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new Disciplina(file.getName(), alunos);
+        return new Disciplina(file.getName().replace(".txt", ""), alunos);
     }
 
-    // Main para testes rápidos
-    public static void main(String[] args) {
-
-        DisciplinaControler controler = getInstance();
-
-        controler.allDisciplinas().forEach(disciplina -> System.out.println(disciplina));
-
-        Disciplina disciplina = controler.findDisciplina("PEOO");
-
-        disciplina.getAlunos().forEach(aluno -> System.out.println(aluno));
-
+    public String lendoGabarito(File file) {
+        String gab = "";
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader reader = new BufferedReader(fileReader);
+            gab = reader.readLine();
+            reader.close();
+            fileReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return gab;
     }
 
 }
