@@ -188,11 +188,9 @@ public class DisciplinaControler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
 
-        // gerar os alunos
-        // cruzar as informações
-        //
     }
 
 }

@@ -34,6 +34,11 @@ public class Aluno {
         respostas = result[0].toCharArray();
     }
 
+    public Aluno(String nome, char[] respostas) {
+        this.nome = nome;
+        this.respostas = respostas;
+    }
+
     /**
      * Calcula os acertos do {@link Aluno} por um gabarito.
      * @param gabarito {@link String} como o Gabarito.

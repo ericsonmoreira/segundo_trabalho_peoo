@@ -3,6 +3,7 @@ package br.uece.peoo.model;
 import br.uece.peoo.controler.DisciplinaControler;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Disciplina {
@@ -35,6 +36,18 @@ public class Disciplina {
     public Disciplina(String nome, List<Aluno> alunos) {
         this.nome = nome;
         this.alunos = alunos;
+    }
+
+    public Disciplina(String nome) {
+        this(nome, new ArrayList<Aluno>());
+    }
+
+    /**
+     * Adiona um novo aluno a disciplina.
+     * @param aluno
+     */
+    public void addAluno(Aluno aluno) {
+        this.alunos.add(aluno);
     }
 
     @Override
