@@ -5,14 +5,13 @@ import br.uece.peoo.model.Disciplina;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DisciplinaControler {
+public class DisciplinaController {
 
-    private static DisciplinaControler controler;
+    private static DisciplinaController controler;
 
     public static final String DOC_ALUNOS = "doc/alunos/";
     public static final String DOC_DISCIPLINAS = "doc/disciplinas/";
@@ -21,7 +20,7 @@ public class DisciplinaControler {
     public static final String DOC_RESULTADOS_POR_NOTAS = "doc/disciplinas/resultados/ord_nota/";
     public static final String DOC_RESULTADOS_POR_NOME = "doc/disciplinas/resultados/ord_nome/";
 
-    private DisciplinaControler() { /* nada aqui */}
+    private DisciplinaController() { /* nada aqui */}
 
     /**
      * Usando aqui o padão de projeto Singleton.
@@ -29,9 +28,9 @@ public class DisciplinaControler {
      * mesmo tempo.
      * @return
      */
-    public static DisciplinaControler getInstance() {
+    public static DisciplinaController getInstance() {
         if (controler == null) {
-            controler = new DisciplinaControler();
+            controler = new DisciplinaController();
         }
         return controler;
     }
@@ -108,7 +107,7 @@ public class DisciplinaControler {
         return gab;
     }
 
-    public static void gerarResultado(Disciplina disciplina, String gabarito) {
+    public void gerarResultado(Disciplina disciplina, String gabarito) {
         List<Aluno> alunosOAlfa = disciplina.getAlunos().stream().
                 sorted(Comparator.comparing(Aluno::getNome)). // Comparado por nome
                 collect(Collectors.toList());
@@ -153,7 +152,7 @@ public class DisciplinaControler {
         }
     }
 
-    public static void gerarHistoricoAlunos() {
+    public void gerarHistoricoAlunos() {
         // pegar os resultados
         File resultados = new File(DOC_RESULTADOS_POR_NOTAS);
 

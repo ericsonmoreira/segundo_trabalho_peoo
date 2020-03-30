@@ -1,8 +1,5 @@
 package br.uece.peoo.model;
 
-import br.uece.peoo.controler.DisciplinaControler;
-
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
