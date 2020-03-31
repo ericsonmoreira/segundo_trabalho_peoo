@@ -126,9 +126,13 @@ public class Main {
 
     private static void viewGabaritosMenu() {
         File file = new File(DOC_GABARITOS); // diretorio como os arquivos dos gabaritos.
+        DisciplinaController controller = DisciplinaController.getInstance();
+
         for (File gabFile: file.listFiles()) {
             if (!gabFile.isDirectory()) {
-                System.out.println(gabFile.getName());
+                String gabName = gabFile.getName().replace(".txt", "");
+                String gabResp = controller.lendoGabarito(gabFile);
+                System.out.println(gabName + "\t" + gabResp);
             }
         }
     }

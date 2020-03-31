@@ -104,6 +104,7 @@ public class DisciplinaController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return gab;
     }
 
@@ -151,6 +152,28 @@ public class DisciplinaController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Método para ler um arquivo de gabarito.
+     * @param file
+     * @return vertor de char de tamanho 10 contendo V ou F apenas.
+     */
+    public char[] lerFileGabarito(File file) {
+        char[] value = null;
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            value = bufferedReader.readLine().toCharArray();
+            bufferedReader.close();
+            fileReader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
 
     public void gerarHistoricoAlunos() {
         // pegar os resultados
