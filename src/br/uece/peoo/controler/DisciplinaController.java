@@ -171,7 +171,7 @@ public class DisciplinaController {
                         FileWriter fileWriter = new FileWriter(aluno, true);
                         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-                        bufferedWriter.append(file.getName() + "\t" + notaAluno);
+                        bufferedWriter.append(file.getName().replace(".txt", "") + "\t" + notaAluno);
                         bufferedWriter.newLine();
 
                         bufferedWriter.close();

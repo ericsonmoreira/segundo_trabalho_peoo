@@ -5,6 +5,7 @@ import br.uece.peoo.model.Aluno;
 import br.uece.peoo.model.Disciplina;
 import br.uece.peoo.util.Menu;
 
+import javax.sound.midi.Soundbank;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -27,12 +28,11 @@ public class Main {
         menu.addOption(1, "Criar Disciplina.", () -> criarDisciplinaMenu());
         menu.addOption(2, "Visualizar Disciplinas.", () -> viewDisciplinasMenu());
         menu.addOption(3, "Gerar Resultado de uma Disciplina.", () -> gerarResultadoDisciplinaMenu());
-        menu.addOption(4, "Criar Histórico de dos Alunos", () -> { /* nada por enquanto */});
+        menu.addOption(4, "Criar Histórico de dos Alunos", () -> gerarHistoricoAlunosMenu());
         menu.addOption(5, "Criar Criar Gabarito", () -> criarGabaritoMenu());
         menu.addOption(6, "Visualizar Gabaritos", () -> viewGabaritosMenu());
 
-
-        menu.addOption(99, "Sair do programa.", () -> System.exit(0)); // fechar o programa
+        menu.addOption(99, "Sair do programa.", () -> System.exit(0)); // opção para fechar o programa
 
         Scanner scanner = new Scanner(System.in);
 
@@ -96,9 +96,9 @@ public class Main {
             Aluno aluno;
             System.out.println("Digite o aluno (Ex.: Fulano de Tal)");
             String alunoName = scanner.nextLine().toUpperCase();
-            System.out.println("Digite o as resposta do aluno (Ex.: FVFVVVFVFF)");
-            String alunoRespostas = scanner.nextLine().toUpperCase();
-            disciplina.addAluno(new Aluno(alunoName, alunoRespostas.toCharArray()));
+            System.out.println();
+            char[] alunoRespostas = pegarGabaritoValido("Digite as resposta do aluno (Ex.: FVFVVVFVFF)");
+            disciplina.addAluno(new Aluno(alunoName, alunoRespostas));
             System.out.println("Digite fim para parar ou nada para continuar");
             if (scanner.nextLine().equals("fim")) {
                 flag = false;
@@ -111,11 +111,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Digite o nome do gabarito");
         String gabName = scanner.nextLine().toUpperCase();
-        System.out.println("Digite as respostas do Gabarito ex.: FFVVFFVFVF");
-        String gabResp = scanner.nextLine().toUpperCase();
-        // precisa colcoar aqui a validação do gabarito
-        // tem que ser 10 caracteres e apenas v ou f.
-        // arquivo do gabarito
+        char[] gabResp = pegarGabaritoValido("Digite as respostas do Gabarito ex.: FFVVFFVFVF");
         File gabFile = new File(DOC_GABARITOS + gabName + ".txt");
         try {
             FileWriter fileWriter = new FileWriter(gabFile);
@@ -138,14 +134,15 @@ public class Main {
     }
 
     private static void gerarResultadoDisciplinaMenu() {
+
         DisciplinaController controller = DisciplinaController.getInstance();
 
         Scanner scanner = new Scanner(System.in);
-
+        System.out.println("Digite o nome da Discplina");
         String nomeDisc = scanner.nextLine().toUpperCase();
-
         File fileDisc = new File(DOC_DISCIPLINAS + nomeDisc + ".txt");
 
+        System.out.println("Digite o nome do Gabarito");
         String nomeGab = scanner.nextLine().toUpperCase();
 
         File fileGab = new File(DOC_GABARITOS + nomeGab + ".txt");
@@ -153,6 +150,34 @@ public class Main {
         Disciplina disciplina = controller.disciplinaFromFile(fileDisc);
 
         controller.gerarResultado(disciplina, controller.lendoGabarito(fileGab));
+
+    }
+
+    public static void gerarHistoricoAlunosMenu() {
+        DisciplinaController controller = DisciplinaController.getInstance();
+
+        controller.gerarHistoricoAlunos();
+
+    }
+
+
+    /**
+     *
+     * @param msg
+     * @return
+     */
+    public static char[] pegarGabaritoValido(String msg) {
+        Scanner scanner = new Scanner(System.in);
+        char[] gab;
+        System.out.println(msg);
+        try {
+            gab = scanner.nextLine().toUpperCase().toCharArray();
+            if (gab.length != 10) throw new IllegalArgumentException();
+        } catch (IllegalArgumentException e) {
+            System.err.println("Esse padão de Respostas não é válido.");
+            gab = pegarGabaritoValido(msg);
+        }
+        return gab;
     }
 
 }
