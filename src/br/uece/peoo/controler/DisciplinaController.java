@@ -174,24 +174,32 @@ public class DisciplinaController {
         return value;
     }
 
-
+    /**
+     *  Leia o resultado de cada disciplina e crie um arquivo para cada aluno
+     *  contendo as disciplinas e notas obtida por ele.
+     *  Ao final, grave também a média do aluno.
+     *  O nome do arquivo é o nome do aluno.
+     */
     public void gerarHistoricoAlunos() {
         // pegar os resultados
         File resultados = new File(DOC_RESULTADOS_POR_NOTAS);
 
         // para cada arquivo de resultado
-        for (File file: resultados.listFiles()) {
+        for (File file : resultados.listFiles()) {
             try {
                 FileReader fileReader = new FileReader(file);
-                BufferedReader reader = new BufferedReader(fileReader);
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-                reader.lines().forEach(line -> {
+                ArrayList<String> lines = new ArrayList<String>();
+                bufferedReader.lines().forEach(s -> lines.add(s));
+                lines.remove(lines.size() - 1); // removendo o ultimo.
+                lines.forEach(line -> {
                     String nomeAluno = line.split("\t")[0];
                     String notaAluno = line.split("\t")[1];
 
                     File aluno = new File(DOC_ALUNOS + nomeAluno + ".txt");
                     try {
-                        FileWriter fileWriter = new FileWriter(aluno, true);
+                        FileWriter fileWriter = new FileWriter(aluno);
                         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
                         bufferedWriter.append(file.getName().replace(".txt", "") + "\t" + notaAluno);
@@ -203,7 +211,7 @@ public class DisciplinaController {
                         e.printStackTrace();
                     }
                 });
-                reader.close();
+                bufferedReader.close();
                 fileReader.close();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -212,7 +220,32 @@ public class DisciplinaController {
             }
 
         }
+/*
+*
+        // Colocando aqui as médias em cada arquivo de aluno gerado.
+        File alunos = new File(DOC_ALUNOS);
+        for (File alunoFile : alunos.listFiles()) {
+            try {
+                FileReader fileReader = new FileReader(alunoFile);
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                // pegando a média
+                double media = bufferedReader.lines().
+                        mapToDouble(value -> new Double(value.split("\t")[1])).average().getAsDouble();
+                bufferedReader.close();
+                fileReader.close();
+                // Escrevendo no fim do arquivo
+                FileWriter fileWriter = new FileWriter(alunoFile, true);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                bufferedWriter.write("Média:\t" + media);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+*
+* */
 
     }
-
 }

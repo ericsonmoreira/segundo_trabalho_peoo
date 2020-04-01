@@ -25,12 +25,16 @@ public class Main {
 
         // Criando um Menu.
         Menu menu = new Menu();
+
         menu.addOption(1, "Criar Disciplina.", () -> criarDisciplinaMenu());
         menu.addOption(2, "Visualizar Disciplinas.", () -> viewDisciplinasMenu());
         menu.addOption(3, "Gerar Resultado de uma Disciplina.", () -> gerarResultadoDisciplinaMenu());
-        menu.addOption(4, "Criar Histórico de dos Alunos", () -> gerarHistoricoAlunosMenu());
-        menu.addOption(5, "Criar Criar Gabarito", () -> criarGabaritoMenu());
-        menu.addOption(6, "Visualizar Gabaritos", () -> viewGabaritosMenu());
+        menu.addOption(4, "Visualizar Resultados", () -> viewResultadosDisciplinasMenu());
+        menu.addOption(5, "Criar Histórico de dos Alunos", () -> gerarHistoricoAlunosMenu());
+        menu.addOption(6, "Criar Criar Gabarito", () -> criarGabaritoMenu());
+        menu.addOption(7, "Visualizar Gabaritos", () -> viewGabaritosMenu());
+        menu.addOption(8, "Visualizar Alunos", () -> viewAlunosMenu());
+
 
         menu.addOption(99, "Sair do programa.", () -> System.exit(0)); // opção para fechar o programa
 
@@ -127,7 +131,6 @@ public class Main {
     private static void viewGabaritosMenu() {
         File file = new File(DOC_GABARITOS); // diretorio como os arquivos dos gabaritos.
         DisciplinaController controller = DisciplinaController.getInstance();
-
         for (File gabFile: file.listFiles()) {
             if (!gabFile.isDirectory()) {
                 String gabName = gabFile.getName().replace(".txt", "");
@@ -159,11 +162,8 @@ public class Main {
 
     public static void gerarHistoricoAlunosMenu() {
         DisciplinaController controller = DisciplinaController.getInstance();
-
         controller.gerarHistoricoAlunos();
-
     }
-
 
     /**
      *
@@ -182,6 +182,75 @@ public class Main {
             gab = pegarGabaritoValido(msg);
         }
         return gab;
+    }
+
+    /**
+     * Mostra os resultados
+     */
+    public static void viewResultadosDisciplinasMenu() {
+        File filePorNome = new File(DOC_RESULTADOS_POR_NOME);
+        System.out.println("Resultados ordenados por Nome");
+        for (File resultadoFile: filePorNome.listFiles()) {
+            if (!resultadoFile.isDirectory()) {
+                System.out.println(resultadoFile.getName());
+                try {
+                    FileReader fileReader = new FileReader(resultadoFile);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    bufferedReader.lines().forEach(System.out::println);
+                    bufferedReader.close();
+                    fileReader.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println();
+            }
+        }
+        File filePorNotas = new File(DOC_RESULTADOS_POR_NOTAS);
+        System.out.println("Resultados ordenados pelas Notas");
+        for (File resultadoFile: filePorNotas.listFiles()) {
+            if (!resultadoFile.isDirectory()) {
+                System.out.println(resultadoFile.getName());
+                try {
+                    FileReader fileReader = new FileReader(resultadoFile);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    bufferedReader.lines().forEach(System.out::println);
+                    bufferedReader.close();
+                    fileReader.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println();
+            }
+        }
+    }
+
+    /**
+     * Mostra o contrudo dos arquivos contidos na pasta DOC_ALUNOS
+     */
+    public static void viewAlunosMenu() {
+        File file = new File(DOC_ALUNOS); // diretorio como os arquivos dos gabaritos.
+        DisciplinaController controller = DisciplinaController.getInstance();
+        for (File alunoFile: file.listFiles()) {
+            if (!alunoFile.isDirectory()) {
+                System.out.println(alunoFile.getName());
+                try {
+                    FileReader fileReader = new FileReader(alunoFile);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    bufferedReader.lines().forEach(System.out::println);
+                    bufferedReader.close();
+                    fileReader.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println();
+            }
+        }
     }
 
 }
