@@ -5,12 +5,12 @@ import br.uece.peoo.model.Aluno;
 import br.uece.peoo.model.Disciplina;
 import br.uece.peoo.util.Menu;
 
-import javax.sound.midi.Soundbank;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 import static br.uece.peoo.controler.DisciplinaController.*;
 
@@ -34,7 +34,6 @@ public class Main {
         menu.addOption(6, "Criar Criar Gabarito", () -> criarGabaritoMenu());
         menu.addOption(7, "Visualizar Gabaritos", () -> viewGabaritosMenu());
         menu.addOption(8, "Visualizar Alunos", () -> viewAlunosMenu());
-
 
         menu.addOption(99, "Sair do programa.", () -> System.exit(0)); // opção para fechar o programa
 
@@ -141,23 +140,18 @@ public class Main {
     }
 
     private static void gerarResultadoDisciplinaMenu() {
-
         DisciplinaController controller = DisciplinaController.getInstance();
-
         Scanner scanner = new Scanner(System.in);
         System.out.println("Digite o nome da Discplina");
+        viewDisciplinasMenu(); // Mostar aqui as disciplinas que existem
         String nomeDisc = scanner.nextLine().toUpperCase();
         File fileDisc = new File(DOC_DISCIPLINAS + nomeDisc + ".txt");
-
         System.out.println("Digite o nome do Gabarito");
+        viewGabaritosMenu(); // Mostrar aqui os gabaritos que existem
         String nomeGab = scanner.nextLine().toUpperCase();
-
         File fileGab = new File(DOC_GABARITOS + nomeGab + ".txt");
-
         Disciplina disciplina = controller.disciplinaFromFile(fileDisc);
-
         controller.gerarResultado(disciplina, controller.lendoGabarito(fileGab));
-
     }
 
     public static void gerarHistoricoAlunosMenu() {
@@ -236,7 +230,7 @@ public class Main {
         DisciplinaController controller = DisciplinaController.getInstance();
         for (File alunoFile: file.listFiles()) {
             if (!alunoFile.isDirectory()) {
-                System.out.println(alunoFile.getName());
+                System.out.println(alunoFile.getName().replace(".txt", ""));
                 try {
                     FileReader fileReader = new FileReader(alunoFile);
                     BufferedReader bufferedReader = new BufferedReader(fileReader);

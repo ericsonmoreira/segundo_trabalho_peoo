@@ -9,9 +9,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DisciplinaController {
+public class Controller {
 
-    private static DisciplinaController controler;
+    private static Controller controler;
 
     public static final String DOC_ALUNOS = "doc/alunos/";
     public static final String DOC_DISCIPLINAS = "doc/disciplinas/";
@@ -20,7 +20,7 @@ public class DisciplinaController {
     public static final String DOC_RESULTADOS_POR_NOTAS = "doc/disciplinas/resultados/ord_nota/";
     public static final String DOC_RESULTADOS_POR_NOME = "doc/disciplinas/resultados/ord_nome/";
 
-    private DisciplinaController() { /* nada aqui */}
+    private Controller() { /* nada aqui */}
 
     /**
      * Usando aqui o padão de projeto Singleton.
@@ -28,9 +28,9 @@ public class DisciplinaController {
      * mesmo tempo.
      * @return
      */
-    public static DisciplinaController getInstance() {
+    public static Controller getInstance() {
         if (controler == null) {
-            controler = new DisciplinaController();
+            controler = new Controller();
         }
         return controler;
     }
