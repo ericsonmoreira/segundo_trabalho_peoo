@@ -1,6 +1,6 @@
 package br.uece.peoo;
 
-import br.uece.peoo.controler.DisciplinaController;
+import br.uece.peoo.controler.Controller;
 import br.uece.peoo.model.Aluno;
 import br.uece.peoo.model.Disciplina;
 import br.uece.peoo.util.Menu;
@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import static br.uece.peoo.controler.DisciplinaController.*;
+import static br.uece.peoo.controler.Controller.*;
 
 /**
  * Considere um arquivo texto onde cada linha representa as respostas de uma prova objetiva de um aluno.
@@ -31,7 +31,7 @@ public class Main {
         menu.addOption(3, "Gerar Resultado de uma Disciplina.", () -> gerarResultadoDisciplinaMenu());
         menu.addOption(4, "Visualizar Resultados", () -> viewResultadosDisciplinasMenu());
         menu.addOption(5, "Criar Histórico de dos Alunos", () -> gerarHistoricoAlunosMenu());
-        menu.addOption(6, "Criar Criar Gabarito", () -> criarGabaritoMenu());
+        menu.addOption(6, "Criar Gabarito", () -> criarGabaritoMenu());
         menu.addOption(7, "Visualizar Gabaritos", () -> viewGabaritosMenu());
         menu.addOption(8, "Visualizar Alunos", () -> viewAlunosMenu());
 
@@ -76,7 +76,7 @@ public class Main {
 
     public static void viewDisciplinasMenu() {
         File file = new File(DOC_DISCIPLINAS);
-        DisciplinaController controler = DisciplinaController.getInstance();
+        Controller controler = Controller.getInstance();
         for (File disciplinaFile: file.listFiles()) {
             if (!disciplinaFile.isDirectory()) { // apenas os arquivos que não são diretórios.
                 Disciplina disciplina = controler.disciplinaFromFile(disciplinaFile);
@@ -89,7 +89,7 @@ public class Main {
      * Chamado quando o usuário deseja criar uma disciplina nova.
      */
     private static void criarDisciplinaMenu() {
-        DisciplinaController controler = DisciplinaController.getInstance();
+        Controller controler = Controller.getInstance();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Nome da Disciplina");
         String discName = scanner.nextLine().toUpperCase();
@@ -129,7 +129,7 @@ public class Main {
 
     private static void viewGabaritosMenu() {
         File file = new File(DOC_GABARITOS); // diretorio como os arquivos dos gabaritos.
-        DisciplinaController controller = DisciplinaController.getInstance();
+        Controller controller = Controller.getInstance();
         for (File gabFile: file.listFiles()) {
             if (!gabFile.isDirectory()) {
                 String gabName = gabFile.getName().replace(".txt", "");
@@ -140,7 +140,7 @@ public class Main {
     }
 
     private static void gerarResultadoDisciplinaMenu() {
-        DisciplinaController controller = DisciplinaController.getInstance();
+        Controller controller = Controller.getInstance();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Digite o nome da Discplina");
         viewDisciplinasMenu(); // Mostar aqui as disciplinas que existem
@@ -155,7 +155,7 @@ public class Main {
     }
 
     public static void gerarHistoricoAlunosMenu() {
-        DisciplinaController controller = DisciplinaController.getInstance();
+        Controller controller = Controller.getInstance();
         controller.gerarHistoricoAlunos();
     }
 
@@ -227,7 +227,7 @@ public class Main {
      */
     public static void viewAlunosMenu() {
         File file = new File(DOC_ALUNOS); // diretorio como os arquivos dos gabaritos.
-        DisciplinaController controller = DisciplinaController.getInstance();
+        Controller controller = Controller.getInstance();
         for (File alunoFile: file.listFiles()) {
             if (!alunoFile.isDirectory()) {
                 System.out.println(alunoFile.getName().replace(".txt", ""));

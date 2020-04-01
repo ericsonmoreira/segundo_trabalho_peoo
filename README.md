@@ -23,6 +23,6 @@ Crie um programa que faça os seguintes itens:
 
 - [x] Permita ao usuário gerar o resultado de uma disciplina. Seu programa deve permitir ao usuário escolher a disciplina e então informar a localização do arquivo contendo o gabarito oficial da prova (apenas uma linha com as 10 respostas corretas) da disciplina escolhida. Em seguida, deve produzir como resposta dois outros arquivos: um contendo a lista dos alunos e seus respectivos pontos (número de acertos) ordenadas por ordem alfabética, e outro contendo as mesmas informações, porém ordenado por ordem decrescente de notas (quantidade de acertos) e mostrando ao final a média da turma. Caso o aluno tenha marcado todas as questões com V ou F, o aluno receberá a 0. Permita ao usuário visualizar esses dados na tela. 
 
-- [ ] Crie também uma opção de criar o histórico dos alunos. Para tanto, leia o resultado de cada disciplina e crie um arquivo para cada aluno contendo as disciplinas e notas obtida por ele. Ao final, grave também a média do aluno. O nome do arquivo é o nome do aluno.
+- [x] Crie também uma opção de criar o histórico dos alunos. Para tanto, leia o resultado de cada disciplina e crie um arquivo para cada aluno contendo as disciplinas e notas obtida por ele. Ao final, grave também a média do aluno. O nome do arquivo é o nome do aluno.
 
 Fique livre para organizar seus arquivos em diretórios da melhor maneira possível.
