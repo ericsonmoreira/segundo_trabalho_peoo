@@ -9,7 +9,10 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 import static br.uece.peoo.controler.Controller.*;
@@ -22,6 +25,9 @@ import static br.uece.peoo.controler.Controller.*;
 public class Main {
 
     public static void main(String[] args) {
+
+        // criando estrutura do projeto
+        criarEstruturaPastas();
 
         // Criando um Menu.
         Menu menu = new Menu();
@@ -50,28 +56,6 @@ public class Main {
             }
         }
 
-    }
-
-    // Exemplo de como pegar o caminho do arquivo onde está o gabarito.
-    public static void teste() {
-        JFrame frame = new JFrame("Robos");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false); // Não pode mudar o tramano do JFrame
-        frame.setContentPane(frame.getContentPane());
-        frame.pack();
-        frame.setPreferredSize(new Dimension(300, 300));
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-
-        JFileChooser arquivo = new JFileChooser();
-        FileNameExtensionFilter filtroPDF = new FileNameExtensionFilter("Gabarito", "txt");
-        arquivo.setCurrentDirectory(new File("doc/"));
-        arquivo.addChoosableFileFilter(filtroPDF);
-        arquivo.setAcceptAllFileFilterUsed(false);
-        arquivo.showOpenDialog(frame);
-        System.out.println(arquivo.getSelectedFile().getAbsolutePath());
-
-        System.exit(0);
     }
 
     public static void viewDisciplinasMenu() {
@@ -245,6 +229,23 @@ public class Main {
                 System.out.println();
             }
         }
+    }
+
+    /**
+     * Cria a estrutura de pastas necessárias para o projeto para o caso de não exitir ainda.
+     */
+    public static void criarEstruturaPastas() {
+        List<File> docs = Arrays.asList(
+                new File(DOC_ALUNOS),
+                new File(DOC_DISCIPLINAS),
+                new File(DOC_GABARITOS),
+                new File(DOC_RESULTADOS),
+                new File(DOC_RESULTADOS_POR_NOTAS),
+                new File(DOC_RESULTADOS_POR_NOME)
+        );
+        docs.forEach(file -> {
+            if (!file.exists()) file.mkdirs();
+        });
     }
 
 }
