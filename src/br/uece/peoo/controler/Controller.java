@@ -5,6 +5,7 @@ import br.uece.peoo.model.Disciplina;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ public class Controller {
     public static final String DOC_GABARITOS = "doc/gabaritos/";
     public static final String DOC_RESULTADOS = "doc/disciplinas/resultados/";
     public static final String DOC_RESULTADOS_POR_NOTAS = "doc/disciplinas/resultados/ord_nota/";
-    public static final String DOC_RESULTADOS_POR_NOME = "doc/disciplinas/resultados/ord_nome/";
+    public static final String DOC_RESULTADOS_POR_NOMES = "doc/disciplinas/resultados/ord_nome/";
 
     private Controller() { /* nada aqui */}
 
@@ -36,10 +37,10 @@ public class Controller {
     }
 
     /**
-     * Busca todas as disciplinas no
+     * Retorna todas as disciplinas.
      * @return
      */
-    public ArrayList<Disciplina> allDisciplinas() {
+    public ArrayList<Disciplina> getAllDisciplinas() {
         ArrayList<Disciplina> disciplinas = new ArrayList<Disciplina>();
         File folderDisciplinas = new File(DOC_DISCIPLINAS); // instancia a pasta das disciplinas
         if (folderDisciplinas.isDirectory()) {
@@ -129,7 +130,7 @@ public class Controller {
         double mediaGeral = alunosOAlfa.stream().
                 mapToDouble(aluno -> aluno.getAcertos(gabarito)).average().getAsDouble();
 
-        File alunosOAlfaFile = new File(DOC_RESULTADOS_POR_NOME + disciplina.getNome() + ".txt");
+        File alunosOAlfaFile = new File(DOC_RESULTADOS_POR_NOMES + disciplina.getNome() + ".txt");
         File alunosAcertosFile = new File(DOC_RESULTADOS_POR_NOTAS + disciplina.getNome() + ".txt");
 
         try {
@@ -271,5 +272,25 @@ public class Controller {
         for (File alunoFile : alunos.listFiles()) {
             alunoFile.delete();
         }
+    }
+
+    /**
+     * Retorna todos os nomes dos arquivos de gabarito que estão em DOC_GABARITOS.
+     * @return Lista de Strings
+     */
+    public List<String> getNomesGabaritos(){
+        File gabsFolder = new File(DOC_GABARITOS);
+        return Arrays.stream(gabsFolder.listFiles()).
+                map(file -> file.getName().replace(".txt", "")).collect(Collectors.toList());
+    }
+
+    /**
+     * Retorna todos os nomes dos arquivos de discipolinas que estão em DOC_DISCIPLINAS.
+     * @return Lista de Strings
+     */
+    public List<String> getNomesDisciplinas(){
+        File discFolder = new File(DOC_DISCIPLINAS);
+        return Arrays.stream(discFolder.listFiles()).
+                map(file -> file.getName().replace(".txt", "")).collect(Collectors.toList());
     }
 }
