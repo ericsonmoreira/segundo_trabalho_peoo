@@ -35,6 +35,10 @@ public class Controller {
         return controler;
     }
 
+    /**
+     * Busca todas as disciplinas no
+     * @return
+     */
     public ArrayList<Disciplina> allDisciplinas() {
         ArrayList<Disciplina> disciplinas = new ArrayList<Disciplina>();
         File folderDisciplinas = new File(DOC_DISCIPLINAS); // instancia a pasta das disciplinas

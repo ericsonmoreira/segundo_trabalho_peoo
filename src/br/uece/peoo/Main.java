@@ -170,7 +170,7 @@ public class Main {
         System.out.println("Resultados ordenados por Nome");
         for (File resultadoFile: filePorNome.listFiles()) {
             if (!resultadoFile.isDirectory()) {
-                System.out.println(resultadoFile.getName());
+                System.out.println(resultadoFile.getName().replace(".txt", ""));
                 try {
                     FileReader fileReader = new FileReader(resultadoFile);
                     BufferedReader bufferedReader = new BufferedReader(fileReader);
