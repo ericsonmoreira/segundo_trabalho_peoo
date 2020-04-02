@@ -15,7 +15,7 @@ Paulo Henrique Souza Filho                  |1509022
 
 Considere um arquivo texto onde cada linha representa as respostas de uma prova objetiva de um aluno. Essa prova contém 10 questões, todas do tipo V ou F. O final de cada linha contém o nome do aluno que respondeu aquelas opções separadas das respostas por um “tab”. A Figura abaixo mostra um exemplo desse arquivo:
 
-![Alt Text](https://github.com/ericsonmoreira/segundo_trabalho_peoo/blob/master/doc/imagem.png)
+![Alt Text](https://github.com/ericsonmoreira/segundo_trabalho_peoo/blob/master/imgs/imagem.png)
 
 Crie um programa que faça os seguintes itens:
 
