@@ -172,7 +172,7 @@ public class Main {
             // Verifica se tem 10 caracteres.
             if (gab.length != 10) throw new IllegalArgumentException();
             // Verifica se algum desses Caracteres é diferente de V ou F.
-            for (char c: gab) if (c != 'F' || c != 'V') throw new IllegalArgumentException();
+            for (char c : gab) if (c != 'F' &&  c != 'V') throw new IllegalArgumentException();
         } catch (IllegalArgumentException e) {
             System.err.println("Esse padão de Respostas não é válido.");
             gab = validarGabarito(msg);
