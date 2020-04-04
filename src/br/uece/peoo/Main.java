@@ -82,7 +82,6 @@ public class Main {
             Aluno aluno;
             System.out.println("Digite o aluno (Ex.: Fulano de Tal)");
             String alunoName = scanner.nextLine().toUpperCase();
-            System.out.println();
             char[] alunoRespostas = validarGabarito("Digite as resposta do aluno (Ex.: FVFVVVFVFF)");
             disciplina.addAluno(new Aluno(alunoName, alunoRespostas));
             System.out.println("Digite fim para parar ou nada para continuar");
@@ -134,6 +133,17 @@ public class Main {
      * DOC_RESULTADOS_POR_NOTAS ---> Alunos ordenados pela nota (Ordem decrescente).
      */
     private static void gerarResultadoDisciplinaMenu() {
+        // verificar aqui se tem disciplinas cadastradas
+        if (!existeDiscipliaCadastrada()) {
+            System.err.println("Nenhuma Disciplina Cadastrasda. Use a opção [Criar Disciplina].");
+            return;
+        }
+        // verificar aqui se tem gabaritos cadastrados
+        if (!existeGabaritoCadastrado()) {
+            System.err.println("Nenhum Gabarito Cadastrasda. Use a opção [Criar Gabarito].");
+            return;
+        }
+
         Controller controller = Controller.getInstance();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Disciplinas:");
@@ -156,6 +166,7 @@ public class Main {
     public static void gerarHistoricoAlunosMenu() {
         Controller controller = Controller.getInstance();
         controller.gerarHistoricoAlunos();
+        System.out.println("Historicos dos Alunos Gerados. Para visualizar use a opção [Visualizar Alunos.]");
     }
 
     /**
@@ -288,6 +299,23 @@ public class Main {
                 System.out.println();
             }
         }
+    }
+
+    /**
+     * Verifica se tem arquivos de disciplina em DOC_DISCIPLINAS
+     * @return
+     */
+    public static boolean existeDiscipliaCadastrada() {
+        File fileDisc = new File(DOC_DISCIPLINAS);
+        return Arrays.stream(fileDisc.listFiles()).filter(file -> !file.isDirectory()).count() > 0;
+    }
+
+    /**
+     * Verifica se tem arquivos de gabaritos em DOC_GABARITOS
+     * @return
+     */
+    public static boolean existeGabaritoCadastrado() {
+        return new File(DOC_GABARITOS).listFiles().length > 0;
     }
 
     /**

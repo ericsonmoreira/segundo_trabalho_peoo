@@ -89,7 +89,7 @@ public class Controller {
             reader.close();
             fileReader.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -293,4 +293,5 @@ public class Controller {
         return Arrays.stream(discFolder.listFiles()).
                 map(file -> file.getName().replace(".txt", "")).collect(Collectors.toList());
     }
+
 }
