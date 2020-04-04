@@ -64,7 +64,7 @@ public class Controller {
      * @return arquivo da disciplina em formato de texto(txt).
      */
     public File fileFromDisciplina(Disciplina disciplina) {
-        File fileDisciplia = new File("doc/disciplinas/" + disciplina.getNome() + ".txt");
+        File fileDisciplia = new File(DOC_DISCIPLINAS + disciplina.getNome() + ".txt");
         try {
             FileWriter fileWriter = new FileWriter(fileDisciplia);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
