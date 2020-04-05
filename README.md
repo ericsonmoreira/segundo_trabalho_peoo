@@ -26,3 +26,18 @@ Crie um programa que faça os seguintes itens:
 - [x] Crie também uma opção de criar o histórico dos alunos. Para tanto, leia o resultado de cada disciplina e crie um arquivo para cada aluno contendo as disciplinas e notas obtida por ele. Ao final, grave também a média do aluno. O nome do arquivo é o nome do aluno.
 
 Fique livre para organizar seus arquivos em diretórios da melhor maneira possível.
+
+## Como Funciona
+
+O progama usa a seguinte hierarquia de pastas:
+
+ - doc/alunos/ (pasta onde ficam os arquivos de histórico dos alunos)
+ - doc/disciplinas/ (pasta onde ficam salvas as disciplinas cadastradas)
+ - doc/gabaritos/ (pasta onde são salvos os gabaritos cadastrados)
+ - doc/disciplinas/resultados/ (pasta onde ficam salvos os resultados)
+ - doc/disciplinas/resultados/ord_nota/ (sub-pasta para resultados por ondem decrescente de nota)
+ - doc/disciplinas/resultados/ord_nome/ (sub-pasta para resultados por ordem do nome do aluno)
+
+Não é preciso criar essas pastas antes de testar o programa, pois elas são criadas no caso de não existirem.
+
+A classe br.uece.peoo.Main deve ser executada para poder usar o programa. 
