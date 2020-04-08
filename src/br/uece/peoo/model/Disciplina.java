@@ -51,7 +51,7 @@ public class Disciplina {
     public String toString() {
         String aux = "";
         for (Aluno aluno: this.alunos) {
-            aux += aluno.getRespostas() + "\t" + aluno.getNome() + "\n";
+            aux += new String(aluno.getRespostas()) + "\t" + aluno.getNome() + "\n";
         }
         return  aux;
     }

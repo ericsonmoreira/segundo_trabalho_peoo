@@ -49,6 +49,7 @@ public class Controller {
      */
     public static double getMediaAluno(File file) {
         double avarege = 0;
+        String texto = lerArquivo(file);
         try {
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -220,6 +221,23 @@ public class Controller {
             FileWriter fileWriter = new FileWriter(file);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(texto);
+            bufferedWriter.close();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param file
+     * @param texto
+     */
+    public static void addFinalArquivo(File file, String texto) {
+        try {
+            FileWriter fileWriter = new FileWriter(file, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.append(texto);
             bufferedWriter.close();
             fileWriter.close();
         } catch (IOException e) {

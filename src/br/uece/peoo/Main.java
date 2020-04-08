@@ -1,6 +1,5 @@
 package br.uece.peoo;
 
-import br.uece.peoo.control.Controller;
 import br.uece.peoo.model.Aluno;
 import br.uece.peoo.model.Disciplina;
 import br.uece.peoo.util.Menu;
@@ -23,21 +22,20 @@ public class Main {
         criarEstruturaPastas();
         // Criando um Menu.
         Menu menu = new Menu();
-
+        // Inicializa as opções do Menu
         menu.addOption(1, "Criar Disciplina.", () -> criarDisciplinaMenu());
         menu.addOption(2, "Visualizar Disciplinas.", () -> viewDisciplinasMenu());
-        menu.addOption(3, "Gerar Resultado de uma Disciplina.", () -> gerarResultadoDisciplinaMenu());
-        menu.addOption(4, "Visualizar Resultados", () -> viewResultadosDisciplinasMenu());
-        menu.addOption(5, "Criar Histórico de dos Alunos", () -> gerarHistoricoAlunosMenu());
-        menu.addOption(6, "Criar Gabarito", () -> criarGabaritoMenu());
-        menu.addOption(7, "Visualizar Gabaritos", () -> viewGabaritosMenu());
+        menu.addOption(3, "Criar Gabarito", () -> criarGabaritoMenu());
+        menu.addOption(4, "Visualizar Gabaritos", () -> viewGabaritosMenu());
+        menu.addOption(5, "Gerar Resultado de uma Disciplina.", () -> gerarResultadoDisciplinaMenu());
+        menu.addOption(6, "Visualizar Resultados", () -> viewResultadosMenu());
+        menu.addOption(7, "Criar Histórico dos Alunos", () -> gerarHistoricoAlunosMenu());
         menu.addOption(8, "Visualizar Alunos", () -> viewAlunosMenu());
-
+        // Opção para fechar o programa
         menu.addOption(99, "Sair do programa.", () -> System.exit(0)); // opção para fechar o programa
 
-        Scanner scanner = new Scanner(System.in);
-
         while (true) {
+            Scanner scanner = new Scanner(System.in);
             menu.printMenu();
             System.out.println("Digite a opção:");
             try {
@@ -51,20 +49,7 @@ public class Main {
     }
 
     /**
-     * Mostra as disciplinas.
-     */
-    public static void viewDisciplinasMenu() {
-        File file = new File(DOC_DISCIPLINAS);
-        for (File disciplinaFile: file.listFiles()) {
-            if (!disciplinaFile.isDirectory()) { // apenas os arquivos que não são diretórios.
-                Disciplina disciplina = disciplinaFromFile(disciplinaFile);
-                System.out.println(disciplina);
-            }
-        }
-    }
-
-    /**
-     * Cria uma disciplina e a salca na pasta DOC_DISCIPLINAS
+     * Cria uma disciplina e a salva na pasta DOC_DISCIPLINAS
      */
     private static void criarDisciplinaMenu() {
         Scanner scanner = new Scanner(System.in);
@@ -87,23 +72,30 @@ public class Main {
     }
 
     /**
+     * Mostra as disciplinas contidas em DOC_DISCIPLINAS
+     */
+    public static void viewDisciplinasMenu() {
+        File file = new File(DOC_DISCIPLINAS);
+        System.out.println("Disciplinas");
+        for (File disciplinaFile: file.listFiles()) {
+            if (!disciplinaFile.isDirectory()) { // apenas os arquivos que não são diretórios.
+                Disciplina disciplina = disciplinaFromFile(disciplinaFile);
+                System.out.println(disciplina.getNome());
+                System.out.println(disciplina);
+            }
+        }
+    }
+
+    /**
      * Cria um gabarito e o salva na pasta DOC_GABARITOS
      */
     private static void criarGabaritoMenu() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Digite o nome do gabarito");
-        String gabName = scanner.nextLine().toUpperCase();
-        char[] gabResp = validarGabarito("Digite as respostas do Gabarito ex.: FFVVFFVFVF");
-        File gabFile = new File(DOC_GABARITOS + gabName + ".txt");
-        try {
-            FileWriter fileWriter = new FileWriter(gabFile);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(gabResp);
-            bufferedWriter.close();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String nomeGabarito = scanner.nextLine().toUpperCase();
+        char[] gabarito = validarGabarito("Digite as respostas do Gabarito ex.: FFVVFFVFVF");
+        File gabFile = new File(DOC_GABARITOS + nomeGabarito + ".txt");
+        escreverArquivo(gabFile, new String(gabarito));
     }
 
     /**
@@ -187,6 +179,33 @@ public class Main {
         }
         texto += "Média\t" + mediaGeral;
         escreverArquivo(fileResultadoPorNotas, texto);
+        System.out.println("Resultado da Disciplia gerado. Para visualizar use a opção [Visualizar Resultados]");
+    }
+
+    /**
+     * Mostra os resultados contidos nas pastas
+     * DOC_RESULTADOS_POR_NOMES
+     * DOC_RESULTADOS_POR_NOTAS
+     */
+    public static void viewResultadosMenu() {
+        // Imprime os resultados dos alunos ordenados pelos nomes
+        File filePorNome = new File(DOC_RESULTADOS_POR_NOMES);
+        System.out.println("Resultados ordenados por Nome");
+        for (File resultadoFile: filePorNome.listFiles()) {
+            if (!resultadoFile.isDirectory()) {
+                System.out.println(resultadoFile.getName().replace(".txt", ""));
+                System.out.println(lerArquivo(resultadoFile));
+            }
+        }
+        // Imprime os resultados dos alunos ordenados pelas notas
+        File filePorNotas = new File(DOC_RESULTADOS_POR_NOTAS);
+        System.out.println("Resultados ordenados pelas Notas");
+        for (File resultadoFile: filePorNotas.listFiles()) {
+            if (!resultadoFile.isDirectory()) {
+                System.out.println(resultadoFile.getName());
+                System.out.println(lerArquivo(resultadoFile));
+            }
+        }
     }
 
     /**
@@ -195,103 +214,25 @@ public class Main {
     public static void gerarHistoricoAlunosMenu() {
         clearDocAlunos(); // limpa os históricos dos alunos
         File resultados = new File(DOC_RESULTADOS_POR_NOTAS);
-        for (File file : resultados.listFiles()) { // para cada arquivo de resultado
-            try {
-                FileReader fileReader = new FileReader(file);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-                ArrayList<String> lines = new ArrayList<String>();
-                bufferedReader.lines().forEach(s -> lines.add(s));
-                lines.remove(lines.size() - 1); // removendo o ultimo.
-                lines.forEach(line -> {
-                    String nomeAluno = line.split("\t")[0];
-                    String notaAluno = line.split("\t")[1];
-
-                    File aluno = new File(DOC_ALUNOS + nomeAluno + ".txt");
-                    try {
-                        FileWriter fileWriter = new FileWriter(aluno, true);
-                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-
-                        bufferedWriter.append(file.getName().replace(".txt", "") + "\t" + notaAluno);
-                        bufferedWriter.newLine();
-
-                        bufferedWriter.close();
-                        fileWriter.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-                bufferedReader.close();
-                fileReader.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+        // Para cada arquivo de resultado
+        for (File fileResultado : resultados.listFiles()) { // para cada arquivo de resultado
+            String textoResultado = lerArquivo(fileResultado);
+            List<String> lines = Arrays.asList(textoResultado.split("\n"));
+            for (int i = 0; i < lines.size() - 1; i++) { // não usamos o último elemento dessa lista
+                String nomeAluno = lines.get(i).split("\t")[0]; // pegar o nome do aluno
+                String notaAluno = lines.get(i).split("\t")[1]; // pega a nota do aluno
+                String nomeDisciplina = fileResultado.getName().replace(".txt", "");
+                File fileAluno = new File(DOC_ALUNOS + nomeAluno + ".txt");
+                addFinalArquivo(fileAluno, nomeDisciplina + "\t" + notaAluno + "\n");
             }
-
         }
-        // Colocando as médias em cada arquivo de aluno gerado.
+        // Colocando as médias no final de cada arquivo de aluno gerado.
         File alunos = new File(DOC_ALUNOS);
-
         for (File alunoFile : alunos.listFiles()) {
             double media = getMediaAluno(alunoFile); // obtendo a média
-            try {
-                FileWriter fileWriter = new FileWriter(alunoFile, true);
-                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                bufferedWriter.write("MEDIA\t" + media);
-                bufferedWriter.close();
-                fileWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            addFinalArquivo(alunoFile, "Média\t" + media);
         }
         System.out.println("Historicos dos Alunos Gerados. Para visualizar use a opção [Visualizar Alunos.]");
-    }
-
-    /**
-     * Mostra os resultados contidos nas pastas
-     * DOC_RESULTADOS_POR_NOMES
-     * DOC_RESULTADOS_POR_NOTAS
-     */
-    public static void viewResultadosDisciplinasMenu() {
-        File filePorNome = new File(DOC_RESULTADOS_POR_NOMES);
-        System.out.println("Resultados ordenados por Nome");
-        for (File resultadoFile: filePorNome.listFiles()) {
-            if (!resultadoFile.isDirectory()) {
-                System.out.println(resultadoFile.getName().replace(".txt", ""));
-                try {
-                    FileReader fileReader = new FileReader(resultadoFile);
-                    BufferedReader bufferedReader = new BufferedReader(fileReader);
-                    bufferedReader.lines().forEach(System.out::println);
-                    bufferedReader.close();
-                    fileReader.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.out.println();
-            }
-        }
-        File filePorNotas = new File(DOC_RESULTADOS_POR_NOTAS);
-        System.out.println("Resultados ordenados pelas Notas");
-        for (File resultadoFile: filePorNotas.listFiles()) {
-            if (!resultadoFile.isDirectory()) {
-                System.out.println(resultadoFile.getName());
-                try {
-                    FileReader fileReader = new FileReader(resultadoFile);
-                    BufferedReader bufferedReader = new BufferedReader(fileReader);
-                    bufferedReader.lines().forEach(System.out::println);
-                    bufferedReader.close();
-                    fileReader.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.out.println();
-            }
-        }
     }
 
     /**

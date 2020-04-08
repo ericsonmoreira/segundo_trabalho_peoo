@@ -52,7 +52,7 @@ public class Aluno {
     public int getAcertos(String gabarito) {
         if (this.respostasTodasIguais()) return 0;
         int count = 0;
-        char[] gabChars = gabarito.toCharArray(); // caracteres da String gabarito
+        char[] gabChars = gabarito.replace("\n", "").toCharArray(); // caracteres da String gabarito
         for (int i = 0; i < gabChars.length; i++) if (this.respostas[i] == gabChars[i]) count++;
         return count;
     }
