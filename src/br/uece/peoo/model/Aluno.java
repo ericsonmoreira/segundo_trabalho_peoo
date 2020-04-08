@@ -1,8 +1,5 @@
 package br.uece.peoo.model;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class Aluno {
 
     private String nome;
@@ -26,18 +23,9 @@ public class Aluno {
     }
 
     /**
-     * @param cod
-     */
-    public Aluno(String cod) {
-        String[] result =  cod.split("\t");
-        this.nome = result[1];
-        respostas = result[0].toCharArray();
-    }
-
-    /**
-     *
-     * @param nome
-     * @param respostas
+     * Construtor padrão.
+     * @param nome Nome do aluno
+     * @param respostas vertor com as resposatas do aluno
      */
     public Aluno(String nome, char[] respostas) {
         this.nome = nome;
@@ -58,7 +46,7 @@ public class Aluno {
     }
 
     /**
-     * Método interno para verificar se Respostas é VVVVVVVVVV ou FFFFFFFFFF.
+     * Verifica se todas as respostas são iguais.
      * @return
      */
     private boolean respostasTodasIguais() {

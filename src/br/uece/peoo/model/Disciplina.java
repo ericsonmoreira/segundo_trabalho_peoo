@@ -26,15 +26,19 @@ public class Disciplina {
     }
 
     /**
-     *
-     * @param nome
-     * @param alunos
+     * Construtor padão.
+     * @param nome Nome da disciplina.
+     * @param alunos Lista dos alunos.
      */
     public Disciplina(String nome, List<Aluno> alunos) {
         this.nome = nome;
         this.alunos = alunos;
     }
 
+    /**
+     * Construtor de um único parâmetro.
+     * @param nome Nome da disciplina.
+     */
     public Disciplina(String nome) {
         this(nome, new ArrayList<Aluno>());
     }

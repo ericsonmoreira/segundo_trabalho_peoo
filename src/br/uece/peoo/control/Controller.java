@@ -4,7 +4,10 @@ import br.uece.peoo.model.Aluno;
 import br.uece.peoo.model.Disciplina;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Controller {
@@ -63,7 +66,7 @@ public class Controller {
     }
 
     /**
-     * Deletar todos os arquivos de alunos
+     * Deletar todos os arquivos em DOC_ALUNOS
      */
     public static void clearDocAlunos() {
         File alunos = new File(DOC_ALUNOS);
@@ -189,11 +192,7 @@ public class Controller {
         });
     }
 
-    /**
-     *
-     * @param nome
-     * @return
-     */
+    // o nome já explica
     public static String lerArquivo(File file) {
         String texto = "";
         try {
@@ -211,11 +210,7 @@ public class Controller {
         return texto;
     }
 
-    /**
-     *
-     * @param file
-     * @param texto
-     */
+    // o nome já explica
     public static void escreverArquivo(File file, String texto) {
         try {
             FileWriter fileWriter = new FileWriter(file);
@@ -228,11 +223,7 @@ public class Controller {
         }
     }
 
-    /**
-     *
-     * @param file
-     * @param texto
-     */
+    // o nome já explica
     public static void addFinalArquivo(File file, String texto) {
         try {
             FileWriter fileWriter = new FileWriter(file, true);

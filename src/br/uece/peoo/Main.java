@@ -4,7 +4,7 @@ import br.uece.peoo.model.Aluno;
 import br.uece.peoo.model.Disciplina;
 import br.uece.peoo.util.Menu;
 
-import java.io.*;
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
