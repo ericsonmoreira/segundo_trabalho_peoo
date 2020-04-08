@@ -1,17 +1,15 @@
 package br.uece.peoo;
 
-import br.uece.peoo.controler.Controller;
+import br.uece.peoo.control.Controller;
 import br.uece.peoo.model.Aluno;
 import br.uece.peoo.model.Disciplina;
 import br.uece.peoo.util.Menu;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import static br.uece.peoo.controler.Controller.*;
+import static br.uece.peoo.control.Controller.*;
 
 /**
  * Considere um arquivo texto onde cada linha representa as respostas de uma prova objetiva de um aluno.
@@ -21,10 +19,8 @@ import static br.uece.peoo.controler.Controller.*;
 public class Main {
 
     public static void main(String[] args) {
-
         // criando estrutura do projeto, caso não exista
         criarEstruturaPastas();
-
         // Criando um Menu.
         Menu menu = new Menu();
 
@@ -59,20 +55,18 @@ public class Main {
      */
     public static void viewDisciplinasMenu() {
         File file = new File(DOC_DISCIPLINAS);
-        Controller controler = Controller.getInstance();
         for (File disciplinaFile: file.listFiles()) {
             if (!disciplinaFile.isDirectory()) { // apenas os arquivos que não são diretórios.
-                Disciplina disciplina = controler.disciplinaFromFile(disciplinaFile);
+                Disciplina disciplina = disciplinaFromFile(disciplinaFile);
                 System.out.println(disciplina);
             }
         }
     }
 
     /**
-     * Chamado quando o usuário deseja criar uma disciplina nova.
+     * Cria uma disciplina e a salca na pasta DOC_DISCIPLINAS
      */
     private static void criarDisciplinaMenu() {
-        Controller controler = Controller.getInstance();
         Scanner scanner = new Scanner(System.in);
         System.out.println("Nome da Disciplina");
         String discName = scanner.nextLine().toUpperCase();
@@ -89,7 +83,7 @@ public class Main {
                 flag = false;
             }
         }
-        controler.fileFromDisciplina(disciplina);
+        fileFromDisciplina(disciplina);
     }
 
     /**
@@ -113,15 +107,14 @@ public class Main {
     }
 
     /**
-     *  Mostra todos os gabaritos da pastac DOC_GABARITOS
+     *  Mostra todos os gabaritos da pasta DOC_GABARITOS
      */
     private static void viewGabaritosMenu() {
         File file = new File(DOC_GABARITOS); // diretorio como os arquivos dos gabaritos.
-        Controller controller = Controller.getInstance();
         for (File gabFile: file.listFiles()) {
             if (!gabFile.isDirectory()) {
                 String gabName = gabFile.getName().replace(".txt", "");
-                String gabResp = controller.lendoGabarito(gabFile);
+                String gabResp = lerArquivo(gabFile);
                 System.out.println(gabName + "\t" + gabResp);
             }
         }
@@ -133,107 +126,132 @@ public class Main {
      * DOC_RESULTADOS_POR_NOTAS ---> Alunos ordenados pela nota (Ordem decrescente).
      */
     private static void gerarResultadoDisciplinaMenu() {
-        // verificar aqui se tem disciplinas cadastradas
+        // verifica se há disciplinas cadastradas
         if (!existeDiscipliaCadastrada()) {
             System.err.println("Nenhuma Disciplina Cadastrasda. Use a opção [Criar Disciplina].");
             return;
         }
-        // verificar aqui se tem gabaritos cadastrados
+        // verifica se há gabaritos cadastrados
         if (!existeGabaritoCadastrado()) {
             System.err.println("Nenhum Gabarito Cadastrasda. Use a opção [Criar Gabarito].");
             return;
         }
-
-        Controller controller = Controller.getInstance();
         Scanner scanner = new Scanner(System.in);
+
+        // Seleciona a disciplina
         System.out.println("Disciplinas:");
         viewDisciplinasMenu(); // Mostar aqui as disciplinas que existem
-        List<String> nomesDisciplinas = controller.getNomesDisciplinas(); // pega o nome das disciplinas
+        List<String> nomesDisciplinas = getNomesDisciplinas(); // pega os nomes das disciplinas
         String nomeDisc = existeDisciplina("Digite o nome da disciplina", nomesDisciplinas);
         File fileDisc = new File(DOC_DISCIPLINAS + nomeDisc + ".txt");
+        Disciplina disciplina = disciplinaFromFile(fileDisc); // pegando a disciplina
+
+        // Seleciona o gabarito
         System.out.println("Gabaritos:");
         viewGabaritosMenu(); // Mostrar aqui os gabaritos que existem
-        List<String> nomesGabaritos = controller.getNomesGabaritos(); // pega os nomes dos gabaritos
+        List<String> nomesGabaritos = getNomesGabaritos(); // pega os nomes dos gabaritos
         String nomeGab = existeGabarito("Digite o nome do Gabarito", nomesGabaritos);
         File fileGab = new File(DOC_GABARITOS + nomeGab + ".txt");
-        Disciplina disciplina = controller.disciplinaFromFile(fileDisc);
-        controller.gerarResultado(disciplina, controller.lendoGabarito(fileGab));
+        String gabarito = lerArquivo(fileGab); // pegando o gabarito
+
+        // Lista de alunos ordenados pelo nome
+        List<Aluno> alunosPorNomes = disciplina.getAlunos().stream().
+                sorted(Comparator.comparing(Aluno::getNome)). // Comparado por nome
+                collect(Collectors.toList());
+
+        // Lista de alunos ordenados pela nota decrescentemente
+        List<Aluno> alunosPorNotas = disciplina.getAlunos().stream().
+                sorted(Comparator.comparing(aluno -> aluno.getAcertos(gabarito), Comparator.reverseOrder())).
+                collect(Collectors.toList());
+
+        // Média geram dos alunos
+        double mediaGeral = alunosPorNomes.stream().
+                mapToDouble(aluno -> aluno.getAcertos(gabarito)).average().getAsDouble();
+
+        // Arquivos de resultados
+        File fileResultadoPorNomes = new File(DOC_RESULTADOS_POR_NOMES + disciplina.getNome() + ".txt");
+        File fileResultadoPorNotas = new File(DOC_RESULTADOS_POR_NOTAS + disciplina.getNome() + ".txt");
+
+        // Cria o conteudo do resultado por ordenado por nomes
+        String texto = "";
+        for (Aluno aluno: alunosPorNomes) {
+            texto += aluno.getNome() + "\t" + aluno.getAcertos(gabarito) + "\n";
+        }
+        texto += "Média\t" + mediaGeral;
+        escreverArquivo(fileResultadoPorNomes, texto);
+
+        // Cria o conteudo do resultado ordenado por notas
+        texto = "";
+        for (Aluno aluno: alunosPorNotas) {
+            texto += aluno.getNome() + "\t" + aluno.getAcertos(gabarito) + "\n";
+        }
+        texto += "Média\t" + mediaGeral;
+        escreverArquivo(fileResultadoPorNotas, texto);
     }
 
     /**
      *  Gera os arquivos de históricos de alunos que ficam no DOC_ALUNOS
      */
     public static void gerarHistoricoAlunosMenu() {
-        Controller controller = Controller.getInstance();
-        controller.gerarHistoricoAlunos();
+        clearDocAlunos(); // limpa os históricos dos alunos
+        File resultados = new File(DOC_RESULTADOS_POR_NOTAS);
+        for (File file : resultados.listFiles()) { // para cada arquivo de resultado
+            try {
+                FileReader fileReader = new FileReader(file);
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+                ArrayList<String> lines = new ArrayList<String>();
+                bufferedReader.lines().forEach(s -> lines.add(s));
+                lines.remove(lines.size() - 1); // removendo o ultimo.
+                lines.forEach(line -> {
+                    String nomeAluno = line.split("\t")[0];
+                    String notaAluno = line.split("\t")[1];
+
+                    File aluno = new File(DOC_ALUNOS + nomeAluno + ".txt");
+                    try {
+                        FileWriter fileWriter = new FileWriter(aluno, true);
+                        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+                        bufferedWriter.append(file.getName().replace(".txt", "") + "\t" + notaAluno);
+                        bufferedWriter.newLine();
+
+                        bufferedWriter.close();
+                        fileWriter.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                bufferedReader.close();
+                fileReader.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        // Colocando as médias em cada arquivo de aluno gerado.
+        File alunos = new File(DOC_ALUNOS);
+
+        for (File alunoFile : alunos.listFiles()) {
+            double media = getMediaAluno(alunoFile); // obtendo a média
+            try {
+                FileWriter fileWriter = new FileWriter(alunoFile, true);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                bufferedWriter.write("MEDIA\t" + media);
+                bufferedWriter.close();
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         System.out.println("Historicos dos Alunos Gerados. Para visualizar use a opção [Visualizar Alunos.]");
     }
 
     /**
-     * Garante que o valor digitado tenha 10 caracteres e que seja 'F' ou 'V'.
-     * @param msg
-     * @return uma {@link String} no padão de um gabarito.
-     */
-    public static char[] validarGabarito(String msg) {
-        Scanner scanner = new Scanner(System.in);
-        char[] gab;
-        System.out.println(msg);
-        try {
-            gab = scanner.nextLine().toUpperCase().toCharArray();
-            // Verifica se tem 10 caracteres.
-            if (gab.length != 10) throw new IllegalArgumentException();
-            // Verifica se algum desses Caracteres é diferente de V ou F.
-            for (char c : gab) if (c != 'F' &&  c != 'V') throw new IllegalArgumentException();
-        } catch (IllegalArgumentException e) {
-            System.err.println("Esse padão de Respostas não é válido.");
-            gab = validarGabarito(msg);
-        }
-        return gab;
-    }
-
-    /**
-     * Verifica se a disciplina pedida está entre os nomes de disciplinas passadas como parametro.
-     * @param msg mensagem mostrada antes.
-     * @param disciplinasNames nomes possíveis para o valor digitado
-     * @return um nome de {@link Disciplina} válido.
-     */
-    public static String existeDisciplina(String msg, List<String> disciplinasNames) {
-        Scanner scanner = new Scanner(System.in);
-        String disciplina = null;
-        System.out.println(msg); // imprime a mensagem
-        try {
-            // pega a linha digitada
-            disciplina = scanner.nextLine().toUpperCase();
-            if (!disciplinasNames.contains(disciplina)) throw new IllegalArgumentException();
-        } catch (IllegalArgumentException e) {
-            System.err.println("Diciplina Inválida");
-            disciplina = existeDisciplina(msg, disciplinasNames);
-        }
-        return disciplina;
-    }
-
-    /**
-     * Verifica se o gabarito pedido está entre os nomes dos gabaritos passados como parametro.
-     * @param msg mensagem mostrada antes.
-     * @param disciplinasNames nomes possíveis para o valor digitado
-     * @return um nome de um gabarito contido em DOC_GABARITOS.
-     */
-    public static String existeGabarito(String msg, List<String> gabaritosNames) {
-        Scanner scanner = new Scanner(System.in);
-        String gabarito = null;
-        System.out.println(msg); // imprime a mensagem
-        try {
-            gabarito = scanner.nextLine().toUpperCase();
-            if (!gabaritosNames.contains(gabarito)) throw new IllegalArgumentException();
-        } catch (IllegalArgumentException e) {
-            System.err.println("Gabarito Inválido");
-            gabarito = existeGabarito(msg, gabaritosNames);
-        }
-        return gabarito;
-    }
-
-    /**
-     * Mostra os resultados
+     * Mostra os resultados contidos nas pastas
+     * DOC_RESULTADOS_POR_NOMES
+     * DOC_RESULTADOS_POR_NOTAS
      */
     public static void viewResultadosDisciplinasMenu() {
         File filePorNome = new File(DOC_RESULTADOS_POR_NOMES);
@@ -281,58 +299,12 @@ public class Main {
      */
     public static void viewAlunosMenu() {
         File file = new File(DOC_ALUNOS); // diretorio como os arquivos dos gabaritos.
-        Controller controller = Controller.getInstance();
         for (File alunoFile: file.listFiles()) {
             if (!alunoFile.isDirectory()) {
                 System.out.println(alunoFile.getName().replace(".txt", ""));
-                try {
-                    FileReader fileReader = new FileReader(alunoFile);
-                    BufferedReader bufferedReader = new BufferedReader(fileReader);
-                    bufferedReader.lines().forEach(System.out::println);
-                    bufferedReader.close();
-                    fileReader.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.out.println();
+                System.out.println(lerArquivo(alunoFile));
             }
         }
-    }
-
-    /**
-     * Verifica se tem arquivos de disciplina em DOC_DISCIPLINAS
-     * @return
-     */
-    public static boolean existeDiscipliaCadastrada() {
-        File fileDisc = new File(DOC_DISCIPLINAS);
-        return Arrays.stream(fileDisc.listFiles()).filter(file -> !file.isDirectory()).count() > 0;
-    }
-
-    /**
-     * Verifica se tem arquivos de gabaritos em DOC_GABARITOS
-     * @return
-     */
-    public static boolean existeGabaritoCadastrado() {
-        return new File(DOC_GABARITOS).listFiles().length > 0;
-    }
-
-    /**
-     * Cria a estrutura de pastas necessárias para o projeto para o caso de não exitir ainda.
-     */
-    public static void criarEstruturaPastas() {
-        List<File> docs = Arrays.asList(
-                new File(DOC_ALUNOS),
-                new File(DOC_DISCIPLINAS),
-                new File(DOC_GABARITOS),
-                new File(DOC_RESULTADOS),
-                new File(DOC_RESULTADOS_POR_NOTAS),
-                new File(DOC_RESULTADOS_POR_NOMES)
-        );
-        docs.forEach(file -> {
-            if (!file.exists()) file.mkdirs();
-        });
     }
 
 }

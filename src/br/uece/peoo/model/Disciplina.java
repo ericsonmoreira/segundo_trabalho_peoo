@@ -49,10 +49,11 @@ public class Disciplina {
 
     @Override
     public String toString() {
-        return "Disciplina{" +
-                "nome='" + nome + '\'' +
-                ", alunos=" + alunos +
-                '}';
+        String aux = "";
+        for (Aluno aluno: this.alunos) {
+            aux += aluno.getRespostas() + "\t" + aluno.getNome() + "\n";
+        }
+        return  aux;
     }
 }
 

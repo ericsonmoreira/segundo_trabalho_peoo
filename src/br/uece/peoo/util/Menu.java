@@ -3,6 +3,9 @@ package br.uece.peoo.util;
 import java.util.ArrayList;
 import java.util.Optional;
 
+/**
+ * Classe responsável por gerenciar as opções de um programa.
+ */
 public class Menu {
 
     public Runnable getRunnable(int id) {

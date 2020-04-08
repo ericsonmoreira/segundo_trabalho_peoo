@@ -34,6 +34,11 @@ public class Aluno {
         respostas = result[0].toCharArray();
     }
 
+    /**
+     *
+     * @param nome
+     * @param respostas
+     */
     public Aluno(String nome, char[] respostas) {
         this.nome = nome;
         this.respostas = respostas;
