@@ -25,12 +25,12 @@ public class Main {
         // Inicializa as opções do Menu
         menu.addOption(1, "Criar Disciplina.", () -> criarDisciplinaMenu());
         menu.addOption(2, "Visualizar Disciplinas.", () -> viewDisciplinasMenu());
-        menu.addOption(3, "Criar Gabarito", () -> criarGabaritoMenu());
-        menu.addOption(4, "Visualizar Gabaritos", () -> viewGabaritosMenu());
+        menu.addOption(3, "Criar Gabarito.", () -> criarGabaritoMenu());
+        menu.addOption(4, "Visualizar Gabaritos.", () -> viewGabaritosMenu());
         menu.addOption(5, "Gerar Resultado de uma Disciplina.", () -> gerarResultadoDisciplinaMenu());
-        menu.addOption(6, "Visualizar Resultados", () -> viewResultadosMenu());
-        menu.addOption(7, "Criar Histórico dos Alunos", () -> gerarHistoricoAlunosMenu());
-        menu.addOption(8, "Visualizar Alunos", () -> viewAlunosMenu());
+        menu.addOption(6, "Visualizar Resultados.", () -> viewResultadosMenu());
+        menu.addOption(7, "Criar Histórico dos Alunos.", () -> gerarHistoricoAlunosMenu());
+        menu.addOption(8, "Visualizar Alunos.", () -> viewAlunosMenu());
         // Opção para fechar o programa
         menu.addOption(99, "Sair do programa.", () -> System.exit(0)); // opção para fechar o programa
 
